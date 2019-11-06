@@ -3,6 +3,9 @@ package com.wanglei.springbootdemo.util;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.poi.hwpf.extractor.WordExtractor;
+import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import java.io.*;
 import java.util.Arrays;
@@ -43,9 +46,44 @@ public class PdfProcessUtil {
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+        }finally {
+            try {
+                input.close();
+                document.close();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
         }
 
         return "";
+    }
+
+    /**
+     * 获取word中的文本
+     * @param filePath
+     * @return
+     */
+    public static String getPhoneNum(File filePath) {
+        String text = "";
+
+        String fileName = filePath.getName().toLowerCase();// 得到名字小写
+        try {
+            FileInputStream in = new FileInputStream(filePath);
+            if (fileName.endsWith(".doc")) { // doc为后缀的
+
+                WordExtractor extractor = new WordExtractor(in);
+                text = extractor.getText();
+            }
+            if (fileName.endsWith(".docx")) { // docx为后缀的
+
+                XWPFWordExtractor docx = new XWPFWordExtractor(new XWPFDocument(in));
+                text = docx.getText();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return text;
     }
 
     /**
@@ -83,7 +121,7 @@ public class PdfProcessUtil {
                     File firstF = list.removeFirst();
 
                     //这里不论是文件夹还是文件，只需判断是否以“.pdf”结尾
-                    if (firstF.getAbsolutePath().endsWith(".pdf"))
+                    if (firstF.getAbsolutePath().endsWith(fileType))
                         pdfList.add(firstF);
 
                     File[] files = firstF.listFiles();
@@ -99,7 +137,7 @@ public class PdfProcessUtil {
                         } else {
                             //System.out.println("文件:" + f.getAbsolutePath());
 
-                            if (f.getAbsolutePath().endsWith(".pdf"))
+                            if (f.getAbsolutePath().endsWith(fileType))
                                 pdfList.add(f);
 
                         }

@@ -18,9 +18,9 @@ import java.util.regex.Pattern;
  * @Date 2019-11-05 18:37
  * @Version 1.0
  **/
-public class TestController3 {
+public class TestController3ForWin {
     public static void main(String[] args) throws Exception{
-        File file = new File("D:\\pythonData\\pdfData\\1\\胥\\带有编码的全文\\3202415ZN0107.pdf");
+        File file = new File("D:\\pythonData\\pdfData\\1\\蔡\\32064ZN0126.pdf");
         String fileName = file.getName();
         List<Map<String, String>> list = new ArrayList();
         String content = PdfProcessUtil.pdfToString(file);
@@ -35,7 +35,7 @@ public class TestController3 {
         String subC = content.substring(start + 10).replaceAll("guide.medlive.cn", "").replaceAll("Idiopathic Macular Hole PPP: ", "").replaceAll("References", "");
         //        System.out.println(subC);
 //        String pattern = "[0-9]+\\..*?[0-9]+\\;.*?\\.";
-        String pattern = "[0-9]+\\.[\\s\\S]*?[0-9]+\\;.*?(\\.|http.*?\\.)";
+        String pattern = "[0-9]+\\.[\\s\\S]*?[0-9]+\\;.*?\\.";
         Pattern re = Pattern.compile(pattern);
         Matcher m = re.matcher(subC);
         //创建一个dataMap装载数据
@@ -67,7 +67,7 @@ public class TestController3 {
         sheetName.add("1");
         String[] title = {"文件名", "名字", "标题", "机构", "年份", "刊号"};
         //开始写文件
-        String fileDir = "D:\\pythonData\\toExcel\\writeExcelTest.xls";
+        String fileDir = "D:\\pythonData\\toExcel\\writeExcel.xls";
         File goalFile = new File(fileDir);
         if (!goalFile.exists()) {
             WriteExcelUtil.createExcelXls(fileDir, sheetName, title);

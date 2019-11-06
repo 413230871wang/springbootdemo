@@ -21,7 +21,7 @@ public class TestController2 {
 //        }
 
 
-        LinkedList<File> list = PdfProcessUtil.folderMethod1("/Users/mfhj-dz-001-068/pythonData/getFromPdf/guide",".pdf");
+        LinkedList<File> list = PdfProcessUtil.folderMethod1("D:\\pythonData\\pdfData\\1",".docx");
         System.out.println(list.size());
         for(File file:list){
             System.out.println(file.getName());
