@@ -47,7 +47,7 @@ public class TestControllerMac {
             String subC = content.substring(start + 10).replaceAll("guide.medlive.cn", "").replaceAll("Idiopathic Macular Hole PPP: ", "").replaceAll("References", "");
 //        System.out.println(subC);
 //        String pattern = "[0-9]+\\..*?[0-9]+\\;.*?\\.";
-            String pattern = "[0-9]+\\.[\\s\\S]*?[0-9]+\\;.*?\\.|http.*?[0-9]+\\.";
+            String pattern = "[0-9]+\\.[\\s\\S]*?[0-9]+(\\;|\\:).*?\\.|http.*?[0-9]+\\.";
             Pattern re = Pattern.compile(pattern);
             Matcher m = re.matcher(subC);
             //创建一个dataMap装载数据
@@ -79,7 +79,7 @@ public class TestControllerMac {
             sheetName.add("1");
             String[] title = {"文件名", "名字", "标题", "机构", "年份", "刊号"};
             //开始写文件
-            String fileDir = "/Users/mfhj-dz-001-068/pythonData/guideReferences/"+parentFilename+"/"+fileName+".xls";
+            String fileDir = "/Users/mfhj-dz-001-068/pythonData/guide1/"+parentFilename+"/"+fileName+".xls";
             File goalFile = new File(fileDir);
             if (!goalFile.exists()) {
                 WriteExcelUtil.createExcelXls(fileDir, sheetName, title);
@@ -99,7 +99,7 @@ public class TestControllerMac {
      * @return
      */
     public static int getCodeEndIndex(String str){
-        Pattern p = Pattern.compile("[0-9]{4}\\;");
+        Pattern p = Pattern.compile("[12][0-9]{3}");
         Matcher m = p.matcher(str);
         int index = 0;
         while(m.find()) {
