@@ -261,7 +261,14 @@ public class WriteExcelUtil {
                     cell.setCellValue(titleRow[j]);
                     cell.setCellStyle(cellStyle);
                 }
+                //判断父目录是否存在
+                File fileNew = new File(fileDir);
+                File fileParent = fileNew.getParentFile();
+                if(!fileParent.exists()){
+                    fileParent.mkdirs();
+                }
                 fileOutputStream = new FileOutputStream(fileDir);
+
                 hWorkbook.write(fileOutputStream);
             }
         } catch (Exception e) {
