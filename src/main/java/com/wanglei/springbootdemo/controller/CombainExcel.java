@@ -1,22 +1,15 @@
 package com.wanglei.springbootdemo.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-
-
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.WorkbookSettings;
-import jxl.write.Label;
-import jxl.write.WritableCellFormat;
-import jxl.write.WritableFont;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
-import jxl.write.WriteException;
+import jxl.write.*;
 import jxl.write.biff.RowsExceededException;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Locale;
 /**
  * @ClassName combainExcel
  * @Description
@@ -269,7 +262,7 @@ break;
     public static void main(String[] args) throws Exception {
         System.out.println("*********merger begin*********");
 
-            CombainExcel mergerExcel = new CombainExcel("/Users/mfhj-dz-001-068/pythonData/汇总/神经病学.xls", "/Users/mfhj-dz-001-068/pythonData/guideReferences/神经病学/",
+            CombainExcel mergerExcel = new CombainExcel("/Users/mfhj-dz-001-068/pythonData/汇总/肿瘤科NCCN.xls", "/Users/mfhj-dz-001-068/pythonData/hz1/",
                     1);
             String inf = mergerExcel.mergerExcel();
             System.out.println("------------第1批次文件" + inf + "------------");
