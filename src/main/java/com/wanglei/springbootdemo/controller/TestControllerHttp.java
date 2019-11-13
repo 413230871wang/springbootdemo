@@ -2,18 +2,19 @@ package com.wanglei.springbootdemo.controller;
 
 import com.wanglei.springbootdemo.util.PdfProcessUtil;
 import com.wanglei.springbootdemo.util.WriteExcelUtil;
-import com.wanglei.springbootdemo.util.WriteExcelUtilForWin;
 
 import java.io.File;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TestControllerForWord {
+public class TestControllerHttp {
+
+    public static final String REG = "([hH][tT]{2}[pP]:/*|[hH][tT]{2}[pP][sS]:/*|[fF][tT][pP]:/*)(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\/])+(\\?{0,1}(([A-Za-z0-9-~]+\\={0,1})([A-Za-z0-9-~]*))*)";
 
     public static void main(String[] args) throws Exception{
         //获取所有pdf文件路径的list
-        LinkedList<File> fileList = PdfProcessUtil.folderMethod1("D:\\pythonData\\buchong",".docx");
+        LinkedList<File> fileList = PdfProcessUtil.folderMethod1("D:\\pythonData\\buchong\\麻醉",".pdf");
         System.out.println("文件list长度位："+fileList.size());
         int sumRows = 0;
         for(File file:fileList){
@@ -36,7 +37,7 @@ public class TestControllerForWord {
         String parentFilename = file.getParentFile().getName();
         try {
             List<Map<String, String>> list = new ArrayList();
-            String content = PdfProcessUtil.getPhoneNum(file);
+            String content = PdfProcessUtil.pdfToString(file);
             //根据正则匹配到References的开头
             Pattern p = Pattern.compile("R(EFERENCES|eferences)[\\s\\S]*?1\\.");
             Matcher mm = p.matcher(content);
@@ -48,8 +49,9 @@ public class TestControllerForWord {
             String subC = content.substring(start + 10).replaceAll("guide.medlive.cn", "").replaceAll("Idiopathic Macular Hole PPP: ", "").replaceAll("References", "");
 //        System.out.println(subC);
 //        String pattern = "[0-9]+\\..*?[0-9]+\\;.*?\\.";
-            String pattern = "[0-9]+\\.[\\s\\S]*?[0-9]+\\;.*?\\.|http.*?[0-9]+\\.";
-            Pattern re = Pattern.compile(pattern);
+//            String pattern = "([0-9]{1}|[0-9]{2}|[0-9]{3})\\.[\\s\\S]*?[0-9]{4}(\\;[\\s\\S]*?\\.|\\:[\\s\\S]*?\\.|\\.)|http[\\s\\S]*?[0-9]+\\.";
+            String pattern = "([0-9]{1}|[0-9]{2}|[0-9]{3})\\.[\\s\\S]*?[0-9]{4}(\\;[\\s\\S]*?\\.|\\:[\\s\\S]*?\\.|\\.)";
+            Pattern re = Pattern.compile(REG);
             Matcher m = re.matcher(subC);
             //创建一个dataMap装载数据
             while (m.find()) {
@@ -59,7 +61,7 @@ public class TestControllerForWord {
                 dataMap.put("文件名", fileName);
                 dataMap.put("名字", str[1]);
                 String title = "";
-                for (int i = 2; i < len - 1; i++) {
+                for (int i = 2; i < len - 2; i++) {
                     title = title + str[i];
                 }
                 dataMap.put("标题", title);
@@ -67,7 +69,7 @@ public class TestControllerForWord {
                 //处理year，year中包含机构、年份、期刊号
                 String yearAndCode = str[len - 1].trim();
                 int yearStartIndex = getCodeEndIndex(yearAndCode);
-                String code = yearAndCode.substring(0, yearStartIndex);
+                String code = str[len-2];
                 String year = yearAndCode.substring(yearStartIndex, yearStartIndex + 4);
                 String issueNo = yearAndCode.substring(yearStartIndex);
                 dataMap.put("机构", code);
@@ -100,7 +102,7 @@ public class TestControllerForWord {
      * @return
      */
     public static int getCodeEndIndex(String str){
-        Pattern p = Pattern.compile("[0-9]{4}\\;");
+        Pattern p = Pattern.compile("(19|20)[1-9]{2}");
         Matcher m = p.matcher(str);
         int index = 0;
         while(m.find()) {
