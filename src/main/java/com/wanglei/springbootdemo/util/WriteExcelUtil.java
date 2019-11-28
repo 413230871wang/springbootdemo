@@ -349,16 +349,20 @@ public class WriteExcelUtil {
 
             if(titleRow!=null){
                 for(int rowId = 0; rowId < mapList.size(); rowId++){
-                    Map<String,String> map = mapList.get(rowId);
-                    HSSFRow newRow=sheet.createRow(rowId+1);
-                    newRow.setHeight((short)(20*20));//设置行高  基数为20
+                    try {
+                        Map<String, String> map = mapList.get(rowId);
+                        HSSFRow newRow = sheet.createRow(rowId + 1);
+                        newRow.setHeight((short) (20 * 20));//设置行高  基数为20
 
-                    for (short columnIndex = 0; columnIndex < columnCount; columnIndex++) {  //遍历表头
-                        //trim()的方法是删除字符串中首尾的空格
-                        String mapKey = titleRow.getCell(columnIndex).toString().trim();
-                        HSSFCell cell = newRow.createCell(columnIndex);
-                        cell.setCellStyle(cellStyle);
-                        cell.setCellValue(map.get(mapKey)==null ? null : map.get(mapKey).toString());
+                        for (short columnIndex = 0; columnIndex < columnCount; columnIndex++) {  //遍历表头
+                            //trim()的方法是删除字符串中首尾的空格
+                            String mapKey = titleRow.getCell(columnIndex).toString().trim();
+                            HSSFCell cell = newRow.createCell(columnIndex);
+                            cell.setCellStyle(cellStyle);
+                            cell.setCellValue(map.get(mapKey) == null ? null : map.get(mapKey).toString());
+                        }
+                    }catch (Exception e){
+                        System.out.println("写excel cell出错了");
                     }
                 }
             }

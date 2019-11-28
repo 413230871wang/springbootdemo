@@ -263,7 +263,7 @@ break;
     public static void main(String[] args) throws Exception {
         System.out.println("*********merger begin*********");
 
-            CombainExcelForWin mergerExcel = new CombainExcelForWin("D:\\pythonData\\汇总\\麻醉.xls", "D:\\pythonData\\export\\麻醉\\",
+            CombainExcelForWin mergerExcel = new CombainExcelForWin("D:\\pythonData\\剩下两篇NCCN.xls", "D:\\pythonData\\1\\",
                     1);
             String inf = mergerExcel.mergerExcel();
             System.out.println("------------第1批次文件" + inf + "------------");

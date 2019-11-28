@@ -14,7 +14,7 @@ public class TestControllerHttp {
 
     public static void main(String[] args) throws Exception{
         //获取所有pdf文件路径的list
-        LinkedList<File> fileList = PdfProcessUtil.folderMethod1("D:\\pythonData\\buchong\\麻醉",".pdf");
+        LinkedList<File> fileList = PdfProcessUtil.folderMethod1("D:\\pythonData\\1",".pdf");
         System.out.println("文件list长度位："+fileList.size());
         int sumRows = 0;
         for(File file:fileList){
@@ -50,39 +50,51 @@ public class TestControllerHttp {
 //        System.out.println(subC);
 //        String pattern = "[0-9]+\\..*?[0-9]+\\;.*?\\.";
 //            String pattern = "([0-9]{1}|[0-9]{2}|[0-9]{3})\\.[\\s\\S]*?[0-9]{4}(\\;[\\s\\S]*?\\.|\\:[\\s\\S]*?\\.|\\.)|http[\\s\\S]*?[0-9]+\\.";
-            String pattern = "([0-9]{1}|[0-9]{2}|[0-9]{3})\\.[\\s\\S]*?[0-9]{4}(\\;[\\s\\S]*?\\.|\\:[\\s\\S]*?\\.|\\.)";
-            Pattern re = Pattern.compile(REG);
+            String pattern = "([0-9]{1}|[0-9]{2}|[0-9]{3})\\.[\\s\\S]*?Available (at\\:|\nat\\:)[\\s\\S]*?([0-9]+\\.|Accessed[\\s\\S]*?\\.)";
+            Pattern re = Pattern.compile(pattern);
             Matcher m = re.matcher(subC);
-            //创建一个dataMap装载数据
+            String mGroup = "";//创建一个dataMap装载数据
             while (m.find()) {
-                Map<String, String> dataMap = new HashMap<String, String>();
-                String[] str = m.group().split("\\.");
-                int len = str.length;
-                dataMap.put("文件名", fileName);
-                dataMap.put("名字", str[1]);
-                String title = "";
-                for (int i = 2; i < len - 2; i++) {
-                    title = title + str[i];
-                }
-                dataMap.put("标题", title);
+                try {
+                    Map<String, String> dataMap = new HashMap<String, String>();
+                    mGroup = m.group();
+                    int lindex = mGroup.lastIndexOf("/");
+                    String privateNo = mGroup.substring(lindex + 1,mGroup.length()-1);
+                    //找到Available at:开始的位置
+                    int httpIndex = getCodeEndIndex(mGroup, "Available (at\\:|\nat\\:)");
+                    String subStr = mGroup.substring(0, httpIndex);
+                    String[] str = subStr.trim().split("\\.");
+                    int len = str.length;
+                    dataMap.put("文件名",fileName);
+                    dataMap.put("名字", str[1]);
+                    String title = "";
+                    for(int i = 2;i<len-1;i++) {
+                        title = title + str[i];
+                    }
+                    dataMap.put("标题", title);
 
-                //处理year，year中包含机构、年份、期刊号
-                String yearAndCode = str[len - 1].trim();
-                int yearStartIndex = getCodeEndIndex(yearAndCode);
-                String code = str[len-2];
-                String year = yearAndCode.substring(yearStartIndex, yearStartIndex + 4);
-                String issueNo = yearAndCode.substring(yearStartIndex);
-                dataMap.put("机构", code);
-                dataMap.put("年份", year);
-                dataMap.put("刊号", issueNo);
-                list.add(dataMap);
-                dataMap = null;
+                    //处理year，year中包含机构、年份、期刊号
+                    String yearAndCode = str[len-1].trim();
+                    int yearStartIndex = getCodeEndIndex(yearAndCode);
+                    String code = yearAndCode.substring(0,yearStartIndex);
+                    String year = yearAndCode.substring(yearStartIndex,yearStartIndex+4);
+                    String issueNo = yearAndCode.substring(yearStartIndex);
+                    dataMap.put("机构",code);
+                    dataMap.put("年份",year);
+                    dataMap.put("刊号",issueNo);
+                    dataMap.put("唯一编码", privateNo);
+                    list.add(dataMap);
+                    dataMap = null;
+                }catch (Exception e){
+                    System.out.println("fileName="+fileName);
+                    System.out.println(e.getMessage());
+                }
             }
             List<String> sheetName = new ArrayList<>();
             sheetName.add("1");
-            String[] title = {"文件名", "名字", "标题", "机构", "年份", "刊号"};
+            String[] title = {"文件名", "名字", "标题", "机构", "年份", "刊号","唯一编码"};
             //开始写文件
-            String fileDir = "D:\\pythonData\\buchong\\"+parentFilename+fileName+".xls";
+            String fileDir = "D:\\pythonData\\"+fileName+".xls";
             File goalFile = new File(fileDir);
             if (!goalFile.exists()) {
                 WriteExcelUtil.createExcelXls(fileDir, sheetName, title);
@@ -92,6 +104,7 @@ public class TestControllerHttp {
             }
             return list.size();
         }catch (Exception e){
+            e.printStackTrace();
             System.out.println("fileName="+fileName);
         }
         return 0;
@@ -102,7 +115,21 @@ public class TestControllerHttp {
      * @return
      */
     public static int getCodeEndIndex(String str){
-        Pattern p = Pattern.compile("(19|20)[1-9]{2}");
+        Pattern p = Pattern.compile("(19|20)[0-9]{2}");
+        Matcher m = p.matcher(str);
+        int index = 0;
+        while(m.find()) {
+            index = m.start();
+        }
+        return index;
+    }
+
+    /**
+     * 获取code结束位置
+     * @return
+     */
+    public static int getCodeEndIndex(String str,String pattern){
+        Pattern p = Pattern.compile(pattern);
         Matcher m = p.matcher(str);
         int index = 0;
         while(m.find()) {
