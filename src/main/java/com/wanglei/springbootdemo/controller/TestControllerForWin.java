@@ -37,6 +37,7 @@ public class TestControllerForWin {
             //根据正则匹配到References的开头
             Pattern p = Pattern.compile("R(EFERENCES|eferences)[\\s\\S]*?1\\.");
             Matcher mm = p.matcher(content);
+            Thread thread = new Thread();
             int start = 0;
             while (mm.find()) {
                 start = mm.start();
@@ -105,4 +106,5 @@ public class TestControllerForWin {
         }
         return index;
     }
+
 }
