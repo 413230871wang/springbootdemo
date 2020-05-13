@@ -13,4 +13,8 @@ public class FinalTest {
     public static void main(String[] args) {
         
     }
+
+    public void foo(final int arg){
+        final int var = 0;
+    }
 }
