@@ -6,10 +6,12 @@ import java.util.Arrays;
  * @ClassName CutWord
  * @Description
  * @Author lay
- * @Date 2019/12/4 1:41 下午
+ * @Date 2019/12/4 1:41 ????
  * @Version 1.0
  **/
 public class CutWord {
+    private final String a = "中国";
+
     public static void main(String[] args) {
         String[] strs = {"loan_id",
                 "cur_date",

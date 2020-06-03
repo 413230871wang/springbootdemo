@@ -1,5 +1,8 @@
 package com.wanglei.springbootdemo.other;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * @ClassName InternTest
  * @Description
@@ -31,5 +34,9 @@ public class InternTest {
         String s3 = new StringBuilder("ja").append("sa").toString();
 
         System.out.println(s3.intern() == s3);
+
+        System.out.println(Integer.MAX_VALUE+1);
+
+        Map map = new LinkedHashMap(100,1000,true);
     }
 }
