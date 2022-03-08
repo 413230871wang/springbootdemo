@@ -83,7 +83,7 @@
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-scratchpad</artifactId>
-			<version>4.1.0</version>
+			<version>5.2.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
@@ -98,7 +98,7 @@
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-scratchpad</artifactId>
-			<version>4.1.0</version>
+			<version>5.2.1</version>
 		</dependency>
 		<!-- 处理excel和上面功能是一样的-->
 		<dependency>
